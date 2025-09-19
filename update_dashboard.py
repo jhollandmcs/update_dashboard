@@ -6,11 +6,14 @@ from datetime import datetime
 
 # Load config
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(script_dir, "config.json")
+
 try:
-    with open("config.json") as f:
+    with open(config_path) as f:
         config = json.load(f)
 except FileNotFoundError:
-    print("ERROR: no config file found. Aborting.")
+    print(f"ERROR: no config file found at {config_path}. Aborting.")
     exit()
 
 try:
