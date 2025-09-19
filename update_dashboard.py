@@ -6,8 +6,12 @@ from datetime import datetime
 
 # Load config
 
-with open("config.json") as f:
-    config = json.load(f)
+try:
+    with open("config.json") as f:
+        config = json.load(f)
+except FileNotFoundError:
+    print("ERROR: no config file found. Aborting.")
+    exit()
 
 client_id = config['id']
 client_secret = config['secret']
