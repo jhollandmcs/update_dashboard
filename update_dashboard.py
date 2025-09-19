@@ -8,6 +8,7 @@ from datetime import datetime
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(script_dir, "config.json")
+known_path = os.path.join(script_dir, "known_files.json")
 
 try:
     with open(config_path) as f:
@@ -34,7 +35,7 @@ files_to_replace = []
 # Ignore files whose name and timestamp is unchanged from previous run
 
 try:
-    with open("known_files.json", "r") as f:
+    with open(known_path, "r") as f:
         try:
             data = json.load(f)
             for item in data:
@@ -154,6 +155,6 @@ for f in all_files:
             "formatname": new_format_names[f]
         }
     )
-with open("known_files.json", "w") as f:
+with open(known_path, "w") as f:
     f.write(json.dumps(out))
     print(f"Wrote {len(out)} files to known_files.json")
