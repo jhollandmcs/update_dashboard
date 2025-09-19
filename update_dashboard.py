@@ -13,10 +13,14 @@ except FileNotFoundError:
     print("ERROR: no config file found. Aborting.")
     exit()
 
-client_id = config['id']
-client_secret = config['secret']
-url = config['url']
-target_path = config['target_path']
+try:
+    client_id = config['id']
+    client_secret = config['secret']
+    url = config['url']
+    target_path = config['target_path']
+except KeyError:
+    print("ERROR: invalid config file. Aborting.")
+    exit()
 
 # Scan target directory
 
