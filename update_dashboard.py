@@ -22,21 +22,24 @@ files_to_replace = []
 
 # Ignore files whose name and timestamp is unchanged from previous run
 
-with open("known_files.json", "r") as f:
-    try:
-        data = json.load(f)
-        for item in data:
-            if item['name'] in target_files:
-                full_path = os.path.join(target_path, item['name'])
-                if os.path.getmtime(full_path) == item['timestamp']:
-                    target_files.remove(item['name'])
+try:
+    with open("known_files.json", "r") as f:
+        try:
+            data = json.load(f)
+            for item in data:
+                if item['name'] in target_files:
+                    full_path = os.path.join(target_path, item['name'])
+                    if os.path.getmtime(full_path) == item['timestamp']:
+                        target_files.remove(item['name'])
+                    else:
+                        files_to_replace.append(item['formatname'])
                 else:
-                    files_to_replace.append(item['formatname'])
-            else:
-                files_to_remove.append(item['formatname'])
-    except json.JSONDecodeError:
-        print("WARNING: known_files.json could not be read. No files will be ignored.")
-        pass # if we can't read the JSON, we just ignore it
+                    files_to_remove.append(item['formatname'])
+        except json.JSONDecodeError:
+            print("WARNING: known_files.json could not be read. No files will be ignored.")
+            pass # if we can't read the JSON, we just ignore it
+except FileNotFoundError:
+    pass # if the file doesn't exist, we can also just move on. it will be written later.
 
 # If no new files, do nothing
 
