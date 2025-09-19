@@ -48,7 +48,6 @@ try:
                 else:
                     files_to_remove.append(item['formatname'])
         except json.JSONDecodeError:
-            print("WARNING: known_files.json could not be read. No files will be ignored.")
             pass # if we can't read the JSON, we just ignore it
 except FileNotFoundError:
     pass # if the file doesn't exist, we can also just move on. it will be written later.
@@ -59,6 +58,9 @@ if len(target_files) == 0 and len(files_to_remove) == 0:
     print("No changes found, exiting")
     exit()
 else:
+
+# Print a summary of file changes
+
     print(f"""List of changes:\n\t
         {len(target_files)} files to add: {target_files}\n\t
         {len(files_to_replace)} files to replace: {files_to_replace}\n\t
@@ -88,7 +90,6 @@ try:
     res.raise_for_status()
     info = res.json()
     token = info['access_token']
-    # print("Access token:", token)
 except requests.exceptions.RequestException as e:
     print(f"Error obtaining token: {e}")
     raise SystemExit(1)
@@ -96,8 +97,6 @@ except requests.exceptions.RequestException as e:
 headers = {
     "Authorization": f"Bearer {token}"
 }
-
-
 
 # Get playlist id
 
@@ -130,7 +129,6 @@ for tf in target_files:
         res = requests.post(f"{url}/library", headers=headers, files=files, data=data)
     res.raise_for_status()
     media_info = res.json()
-    print("Uploaded media: ", media_info)
     new_media_ids.append(media_info["files"][0]['mediaId'])
 
 # Get old media ids
@@ -157,4 +155,3 @@ for f in all_files:
     )
 with open(known_path, "w") as f:
     f.write(json.dumps(out))
-    print(f"Wrote {len(out)} files to known_files.json")
